@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem; 
 
@@ -9,7 +10,7 @@ public class Shooter : MonoBehaviour
 
     void Start()
     {
-       
+       GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -28,8 +29,24 @@ public class Shooter : MonoBehaviour
                 target.transform.position = new Vector2(hit.point.x, hit.point.y);
                 Debug.Log(hit.collider.name);
 
+                Vector2 projectileVelocity = CalculateProjectileVelocity(shootPoint.position , hit.point, 1f);
+
+                Rigidbody2D shootBuller = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity).GetComponent<Rigidbody2D>();
+
+                shootBuller.linearVelocity = projectileVelocity;
                 
             }
         }
+    }
+    Vector2 CalculateProjectileVelocity(Vector2 origin, Vector2 target, float time)
+    {
+        Vector2 distance = target - origin;
+
+        float velocityX = distance.x / time;
+        float velocityY = distance.y / time + 0.5f * Mathf.Abs(Physics2D.gravity.y) * time;
+
+        Vector2 projectileVelocity = new Vector2(velocityX, velocityY); 
+
+        return projectileVelocity;
     }
 }
