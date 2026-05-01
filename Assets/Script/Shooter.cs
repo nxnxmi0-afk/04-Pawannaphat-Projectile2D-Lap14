@@ -1,35 +1,34 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // ใช้ Input แบบใหม่โดยไม่ต้องตั้งค่า
+using UnityEngine.InputSystem; 
 
 public class Shooter : MonoBehaviour
 {
-    [SerializeField] private Transform shootPoint;    // จุดที่ยิงออก
-    [SerializeField] private GameObject target;      // เป้าเล็ง / Crosshair
+    [SerializeField] private Transform shootPoint;    
+    [SerializeField] private GameObject target;      
     [SerializeField] private GameObject bulletPrefab;
 
     void Start()
     {
-        // ... (ในรูปถูกพับไว้)
+       
     }
 
     void Update()
     {
-        Vector2 screenPos = Mouse.current.position.ReadValue(); // อ่านค่าตำแหน่งเมาส์ และเก็บใส่ screenPos
+        //Vector2 screenPos = Mouse.current.position.ReadValue();
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Input.GetMouseButtonDown(0))
         {
-            // ยิง Ray เมื่อคลิกเมาส์ซ้าย ที่ตำแหน่งเมาส์ screenPos
-            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+           Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Debug.DrawRay(ray.origin, ray.direction * 5f, Color.red, 5f);
 
-            // รับจุดที่ Ray ชนกับวัตถุ
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+           RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 
-            // ถ้ายิง Ray ชน Collider
-            if (hit.collider != null)
+           if(hit.collider != null)
             {
                 target.transform.position = new Vector2(hit.point.x, hit.point.y);
-                Debug.Log($"Hit {hit.collider.gameObject.name}"); // ปริ้นชื่อวัตถุที่ยิงโดน
+                Debug.Log(hit.collider.name);
+
+                
             }
         }
     }
